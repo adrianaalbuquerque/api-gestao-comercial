@@ -1,44 +1,21 @@
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database.engine import SessionLocal
 from database.models.user_model import User
-import jwt
-import os
+from jose import jwt
 from datetime import datetime, timedelta
-from services.auth_services import criar_usuario
+from services.auth_services import *
+from schemas.schemas import *
 
 router = APIRouter()
 
-SENHA_HASH = os.getenv("SENHA_HASH", "senha criptografada")
-
-class LoginData(BaseModel):
-    username: str
-    senha: str
-
-class RegisterUser(BaseModel):
-    id: int
-    username: str
-    email: str
-    tipo: str
-    senha: str
-
-db: Session = SessionLocal()
-
 @router.post("/login")
 def login(data: LoginData):
-    user = db.query(User).filter_by(user_name = data.username).first()
-    if not user or user.user_senha != data.senha:
-        raise HTTPException(status_code=401, detail="Credenciais inválidas")
-    
-    payload = {
-        "user_id": user.id,
-        "username": user.user_name,
-        "exp": datetime.utcnow() + timedelta(minutes=45)
-    }
-    token = jwt.encode(payload, SENHA_HASH, algorithm="HS256")
-    return {"token": token}
-
+    db = SessionLocal()
+    try:
+        return login_user(data, db)
+    finally:
+        db.close()
 
 @router.post("/register")
 def register(user: RegisterUser):
@@ -51,5 +28,10 @@ def register(user: RegisterUser):
     
 
 @router.post("/refresh-token")
-def refresh_token():
-    pass
+def refresh(data: RefreshToken):
+    db = SessionLocal()
+    try:
+        refresh_t = refresh_token(data.token, db)
+        return {"message": "Novo token gerado", "token" : refresh_t}
+    finally:
+        db.close()
