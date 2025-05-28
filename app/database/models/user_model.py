@@ -1,3 +1,4 @@
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String
 from database.engine import Base
 
@@ -9,3 +10,6 @@ class User(Base):
     user_email = Column(String(200), unique=True, nullable=False)
     user_tipo = Column(String(1), nullable=False)
     user_senha = Column(String(255), nullable=False)
+
+    clientes = relationship("Client", back_populates="usuario")
+
