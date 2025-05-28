@@ -26,10 +26,10 @@ Esta aplicação é uma API RESTful desenvolvida com FastAPI para gestão de cli
 # 📚 Organização
 O projeto segue uma estrutura modular com separação por responsabilidade:
 
-router/ – Definição das rotas da API.
-service/ – Regras de negócio e lógica de aplicação.
-database/ – Modelos e configurações de banco de dados.
-tests/ – Testes automatizados com pytest.
+- router/ – Definição das rotas da API.
+- service/ – Regras de negócio e lógica de aplicação.
+- database/ – Modelos e configurações de banco de dados.
+- tests/ – Testes automatizados com pytest.
 
 # 🚀 Como executar
 Em breve será incluído um arquivo docker-compose.yml para facilitar a execução local. Por enquanto, você pode rodar localmente com os comandos abaixo:
