@@ -1,7 +1,7 @@
-#📦 API de Gestão Comercial
+# 📦 API de Gestão Comercial
 Esta aplicação é uma API RESTful desenvolvida com FastAPI para gestão de clientes, produtos e pedidos de uma empresa do setor comercial. O sistema foi projetado para servir como back-end de uma interface que possibilita o controle de vendas, catálogo de produtos e atendimento ao cliente.
 
-#✨ Funcionalidades
+# ✨ Funcionalidades
 
 - Autenticação e autorização com JWT, incluindo refresh token.
 - CRUD completo para clientes, produtos e pedidos.
@@ -23,7 +23,7 @@ Esta aplicação é uma API RESTful desenvolvida com FastAPI para gestão de cli
 * Pydantic
 * Uvicorn
 
-#📚 Organização
+# 📚 Organização
 O projeto segue uma estrutura modular com separação por responsabilidade:
 
 router/ – Definição das rotas da API.
@@ -31,7 +31,7 @@ service/ – Regras de negócio e lógica de aplicação.
 database/ – Modelos e configurações de banco de dados.
 tests/ – Testes automatizados com pytest.
 
-#🚀 Como executar
+# 🚀 Como executar
 Em breve será incluído um arquivo docker-compose.yml para facilitar a execução local. Por enquanto, você pode rodar localmente com os comandos abaixo:
 
 # Crie e ative um ambiente virtual
