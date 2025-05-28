@@ -45,4 +45,4 @@ pip install -r requirements.txt
 alembic upgrade head
 
 # Inicie a aplicação
-uvicorn main:app --reload
+fastapi dev main.py
