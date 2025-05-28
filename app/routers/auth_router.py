@@ -1,11 +1,7 @@
-from fastapi import APIRouter, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 from database.engine import SessionLocal
-from database.models.user_model import User
-from jose import jwt
-from datetime import datetime, timedelta
 from services.auth_services import *
-from schemas.schemas import *
+from schemas.schemas import RegisterUser, RefreshToken, LoginData
 
 router = APIRouter()
 
