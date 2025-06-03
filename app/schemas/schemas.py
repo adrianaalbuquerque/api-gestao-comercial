@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class LoginData(BaseModel):
     user_email: str
@@ -14,6 +14,10 @@ class RefreshToken(BaseModel):
     token: str
 
 class Clientes(BaseModel):
-    cpf: str
-    email: str
-    name: str
+    client_cpf: str
+    client_email: str
+    client_name: str
+
+    model_config = {
+        "from_attributes": True
+    }
