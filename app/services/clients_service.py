@@ -33,9 +33,11 @@ def cria_cliente(data: Clientes, db: Session, user_id: int) -> Client:
             detail="Erro ao criar cliente"
         )
 
-def listar_clientes(db: Session, user_id: int, name: Optional[str] = None, email: Optional[str] = None, limit: int = 10, offset: int = 0) -> List[Clientes]:
+def listar_clientes(db: Session, user_id: int, id: Optional[int] = None, name: Optional[str] = None, email: Optional[str] = None, limit: int = 10, offset: int = 0) -> List[Clientes]:
     query = db.query(Client).filter(Client.usuario_id == user_id)
 
+    if id:
+        query = query = query.filter(Client.client_id == id)
     if name:
         query = query.filter(Client.client_name.ilike(f"%{name}%"))
     if email:
@@ -53,3 +55,44 @@ def listar_clientes(db: Session, user_id: int, name: Optional[str] = None, email
         clientes.append(cliente)
 
     return clientes
+
+def buscar_cliente_por_id(db: Session, user_id: int, cliente_id: int) -> Optional[Clientes]:
+    cliente_orm = (
+        db.query(Client)
+        .filter(Client.usuario_id == user_id, Client.client_id == cliente_id)
+        .first()
+    )
+
+    if not cliente_orm:
+        return None
+
+    return Clientes(
+        cpf=cliente_orm.client_cpf,
+        email=cliente_orm.client_email,
+        name=cliente_orm.client_name,
+    )
+
+def atualiza_cliente(db: Session, user_id: int, data: Clientes, id: int) -> Client:
+    cliente = db.query(Client).filter_by(client_id = id).first()
+    if cliente:
+        try:
+            cliente.client_cpf = data.client_cpf
+            cliente.client_email = data.client_email
+            cliente.client_name = data.client_name
+            cliente.usuario_id = user_id
+
+            db.commit()
+            db.refresh(cliente)
+            return cliente
+
+        except Exception:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Erro ao atualizar o cliente"
+            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="O cliente não existe"
+        )
