@@ -10,7 +10,7 @@ from .auth_services import (
     get_admin_user
 )
 
-from .clients_service import cria_cliente, listar_clientes
+from .clients_service import cria_cliente, listar_clientes, buscar_cliente_por_id, atualiza_cliente
 
 __all__ = [
     "login_user",
@@ -23,5 +23,7 @@ __all__ = [
     "cria_cliente",
     "get_current_user",
     "get_admin_user",
-    "listar_clientes"
+    "listar_clientes",
+    "buscar_cliente_por_id",
+    "atualiza_cliente"
 ]
