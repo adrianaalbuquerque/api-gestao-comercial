@@ -1,14 +1,13 @@
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from fastapi.responses import JSONResponse
 from database.models.client_model import Client
 from services.auth_services import get_admin_user
-from services import cria_cliente, listar_clientes, buscar_cliente_por_id, atualiza_cliente
+from services import cria_cliente, listar_clientes, buscar_cliente_por_id, atualiza_cliente, deletar_cliente
 from database.engine import SessionLocal
 from schemas.schemas import *
 from sqlalchemy.orm import Session
 from database.models.user_model import User
-from services import get_current_user
 
 router = APIRouter()
 
@@ -84,7 +83,21 @@ def update_client(
     )
     try:
         cliente_atualizado = atualiza_cliente(db, current_user.id, data, client_id)
-        return cliente_atualizado #Clientes.model_validate(cliente_atualizado, from_attributes=True)
+        return cliente_atualizado
     except Exception as e:
         return JSONResponse(status_code=400, content={"message": str(e)})
     
+@router.delete("/{client_id}", status_code=status.HTTP_200_OK)
+def delete_client(
+    client_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_admin_user)
+):
+    if current_user.user_tipo != "A":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Você não tem permissão para realizar esta ação."
+        )
+    
+    deletar_cliente(db, client_id)
+    return {"message": f"Cliente com id {client_id} deletado com sucesso"}

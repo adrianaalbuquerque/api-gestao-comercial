@@ -96,3 +96,21 @@ def atualiza_cliente(db: Session, user_id: int, data: Clientes, id: int) -> Clie
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="O cliente não existe"
         )
+
+def deletar_cliente(db: Session, id: int):
+    cliente = db.query(Client).filter_by(client_id = id).first()
+    if cliente:
+        try:
+            db.delete(cliente)
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Falha ao tentar deletar cliente"
+            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Cliente não existe"
+        )
