@@ -12,4 +12,5 @@ class User(Base):
     user_senha = Column(String(255), nullable=False)
 
     clientes = relationship("Client", back_populates="usuario")
+    produtos = relationship("ProductModel", back_populates="usuario")
 
