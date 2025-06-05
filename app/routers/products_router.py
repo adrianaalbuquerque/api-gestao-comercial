@@ -1,11 +1,11 @@
 from decimal import Decimal
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 from services import *
 from database.engine import SessionLocal
 from schemas.schemas import Product
 from sqlalchemy.orm import Session
-from services import criar_produto, listar_produtos, listar_produto_id, alterar_produto
+from services import criar_produto, listar_produtos, listar_produto_id, alterar_produto, deletar_produto
 from database.models.user_model import User
 
 
@@ -54,8 +54,10 @@ def update_product(
 ):
     return alterar_produto(db=db, data=data, user_id=current_user, product_id=id)
 
-@router.delete("/")
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(
-
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_admin_user)
 ):
-    return
+    deletar_produto(db=db, user_id=current_user, product_id=id)

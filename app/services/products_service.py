@@ -128,6 +128,30 @@ def alterar_produto(
 
 
 def deletar_produto(
-        
+        db: Session,
+        user_id: int,
+        product_id: int
 ):
-    pass
+    if user_id.user_tipo != "A":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Apenas administradores podem excluir produtos"
+        )
+
+    produto_existe = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+
+    if produto_existe:
+        try:
+            db.delete(produto_existe)
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Erro ao tenta excluir o produto"
+            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Produto não encontrado"
+        )
