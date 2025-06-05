@@ -1,4 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from typing import Optional
+from datetime import date
+from decimal import Decimal
 
 class LoginData(BaseModel):
     user_email: str
@@ -17,6 +20,19 @@ class Clientes(BaseModel):
     client_cpf: str
     client_email: str
     client_name: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class Product(BaseModel):
+    descricao: str
+    valor_venda: Decimal
+    codigo_barras: str
+    secao: Optional[str] = None
+    estoque_inicial: int
+    data_validade: Optional[date] = None
+    imagens: Optional[str] = None
 
     model_config = {
         "from_attributes": True
