@@ -2,8 +2,6 @@ from typing import Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from database.models.client_model import Client
-from database.models.user_model import User
-from sqlalchemy.exc import IntegrityError
 from schemas.schemas import Clientes
 from typing import List, Optional
 
@@ -33,11 +31,9 @@ def cria_cliente(data: Clientes, db: Session, user_id: int) -> Client:
             detail="Erro ao criar cliente"
         )
 
-def listar_clientes(db: Session, user_id: int, id: Optional[int] = None, name: Optional[str] = None, email: Optional[str] = None, limit: int = 10, offset: int = 0) -> List[Clientes]:
+def listar_clientes(db: Session, user_id: int, name: Optional[str] = None, email: Optional[str] = None, limit: int = 10, offset: int = 0) -> List[Clientes]:
     query = db.query(Client).filter(Client.usuario_id == user_id)
 
-    if id:
-        query = query = query.filter(Client.client_id == id)
     if name:
         query = query.filter(Client.client_name.ilike(f"%{name}%"))
     if email:
