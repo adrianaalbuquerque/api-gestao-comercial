@@ -5,7 +5,7 @@ from services import *
 from database.engine import SessionLocal
 from schemas.schemas import Product
 from sqlalchemy.orm import Session
-from services import criar_produto, listar_produtos, listar_produto_id
+from services import criar_produto, listar_produtos, listar_produto_id, alterar_produto
 from database.models.user_model import User
 
 
@@ -44,6 +44,15 @@ def get_products_id(
 ):
     produto = listar_produto_id(db=db, product_id=id)
     return produto
+
+@router.put("/{id}")
+def update_product(
+    id: int,
+    data: Product,
+    current_user: User = Depends(get_admin_user),
+    db: Session = Depends(get_db)
+):
+    return alterar_produto(db=db, data=data, user_id=current_user, product_id=id)
 
 @router.delete("/")
 def delete_product(

@@ -87,6 +87,46 @@ def listar_produto_id(
         )
     return Product.model_validate(produto)
 
+def alterar_produto(
+        db: Session,
+        data: Product,
+        user_id: int,
+        product_id: int
+):
+    if user_id.user_tipo != "A":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Apenas administradores podem inserir produtos"
+    )
+    produto_existente = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+
+    if produto_existente:
+       try:
+           produto_existente.descricao = data.descricao
+           produto_existente.valor_venda = data.valor_venda
+           produto_existente.codigo_barras = data.codigo_barras
+           produto_existente.secao = data.secao
+           produto_existente.estoque_inicial = data.estoque_inicial
+           produto_existente.data_validade = data.data_validade
+           produto_existente.imagens = data.imagens
+
+           db.commit()
+           db.refresh(produto_existente)
+           return produto_existente
+       except Exception:
+           db.rollback()
+           raise HTTPException(
+               status_code=status.HTTP_404_NOT_FOUND,
+               detail="Erro ao tentar atualizar o produto"
+           )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Produto não existe"
+        )
+
+
+
 def deletar_produto(
         
 ):

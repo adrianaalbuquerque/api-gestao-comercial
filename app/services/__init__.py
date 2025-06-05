@@ -12,7 +12,7 @@ from .auth_services import (
 
 from .clients_service import cria_cliente, listar_clientes, buscar_cliente_por_id, atualiza_cliente, deletar_cliente
 
-from .products_service import criar_produto, listar_produtos, listar_produto_id
+from .products_service import criar_produto, listar_produtos, listar_produto_id, alterar_produto
 
 __all__ = [
     "login_user",
@@ -31,5 +31,6 @@ __all__ = [
     "deletar_cliente",
     "criar_produto",
     "listar_produtos",
-    "listar_produto_id"
+    "listar_produto_id",
+    "alterar_produto"
 ]
