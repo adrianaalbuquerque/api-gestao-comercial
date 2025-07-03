@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional
 from datetime import date
 from decimal import Decimal
 
@@ -17,9 +17,9 @@ class RefreshToken(BaseModel):
     token: str
 
 class Clientes(BaseModel):
-    client_cpf: str
-    client_email: str
-    client_name: str
+    cpf: str
+    email: str
+    name: str
 
     model_config = {
         "from_attributes": True
@@ -30,10 +30,16 @@ class Product(BaseModel):
     valor_venda: Decimal
     codigo_barras: str
     secao: Optional[str] = None
-    estoque_inicial: int
+    estoque: int
     data_validade: Optional[date] = None
     imagens: Optional[str] = None
 
-    model_config = {
-        "from_attributes": True
-    }
+class ProdutoQuantidade(BaseModel):
+    id: int
+    quantidade: int
+    
+class Orders(BaseModel):
+    period: date
+    status: str
+    client_id: int
+    product_quantity: List[ProdutoQuantidade]
