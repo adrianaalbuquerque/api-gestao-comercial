@@ -21,10 +21,9 @@ def get_db():
 @router.post("/")
 def create_product(
     data: Product,
-    user_id: User = Depends(get_admin_user),
     db: Session = Depends(get_db)
 ):
-    return criar_produto(db=db, current_user=user_id, data=data)
+    return criar_produto(db=db, data=data)
 
 @router.get("/", response_model=List[Product])
 def get_products(
@@ -49,15 +48,13 @@ def get_products_id(
 def update_product(
     id: int,
     data: Product,
-    current_user: User = Depends(get_admin_user),
     db: Session = Depends(get_db)
 ):
-    return alterar_produto(db=db, data=data, user_id=current_user, product_id=id)
+    return alterar_produto(db=db, data=data, product_id=id)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(
     id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_admin_user)
 ):
-    deletar_produto(db=db, user_id=current_user, product_id=id)
+    deletar_produto(db=db, product_id=id)
