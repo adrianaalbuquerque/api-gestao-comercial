@@ -14,6 +14,7 @@ from .clients_service import cria_cliente, listar_clientes, buscar_cliente_por_i
 
 from .products_service import criar_produto, listar_produtos, listar_produto_id, alterar_produto, deletar_produto
 
+from .orders_service import create_order, list_orders, list_order_byid, delete_order
 __all__ = [
     "login_user",
     "criar_usuario",
@@ -33,5 +34,9 @@ __all__ = [
     "listar_produtos",
     "listar_produto_id",
     "alterar_produto",
-    "deletar_produto"
+    "deletar_produto",
+    "create_order",
+    "list_orders",
+    "list_order_byid",
+    "delete_order"
 ]
