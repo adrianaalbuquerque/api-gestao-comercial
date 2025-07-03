@@ -12,17 +12,18 @@ from typing import List, Optional
 
 def criar_produto(
     db: Session,
-    current_user: int,
     data: Product
     ):
     
-    if current_user.user_tipo != "A":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Apenas administradores podem inserir produtos"
+    novo_produto = ProductModel(
+        descricao = data.descricao,
+        valor_venda =  data.valor_venda,
+        codigo_barras = data.codigo_barras,
+        secao = data.secao,
+        estoque = data.estoque,
+        data_validade = data.data_validade,
+        imagens = None
     )
-    novo_produto = ProductModel(**data.model_dump(exclude_unset=True),
-                                usuario_id=current_user.id)
 
     produto_existe = db.query(ProductModel).filter_by(codigo_barras = data.codigo_barras).first()
     if produto_existe:
@@ -66,9 +67,9 @@ def listar_produtos(
 
     if disponibilidade is not None:
         if disponibilidade:
-            query = query.filter(ProductModel.estoque_inicial > 0)
+            query = query.filter(ProductModel.estoque > 0)
         else:
-            query = query.filter(ProductModel.estoque_inicial <= 0)
+            query = query.filter(ProductModel.estoque <= 0)
 
     produtos_orm = query.offset(offset).limit(limit).all()
 
@@ -90,14 +91,8 @@ def listar_produto_id(
 def alterar_produto(
         db: Session,
         data: Product,
-        user_id: int,
         product_id: int
 ):
-    if user_id.user_tipo != "A":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Apenas administradores podem inserir produtos"
-    )
     produto_existente = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
     if produto_existente:
@@ -106,7 +101,7 @@ def alterar_produto(
            produto_existente.valor_venda = data.valor_venda
            produto_existente.codigo_barras = data.codigo_barras
            produto_existente.secao = data.secao
-           produto_existente.estoque_inicial = data.estoque_inicial
+           produto_existente.estoque = data.estoque
            produto_existente.data_validade = data.data_validade
            produto_existente.imagens = data.imagens
 
@@ -129,15 +124,8 @@ def alterar_produto(
 
 def deletar_produto(
         db: Session,
-        user_id: int,
         product_id: int
 ):
-    if user_id.user_tipo != "A":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Apenas administradores podem excluir produtos"
-        )
-
     produto_existe = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
     if produto_existe:
